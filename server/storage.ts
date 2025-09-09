@@ -113,7 +113,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getMenuItems(categoryId?: string, search?: string): Promise<(MenuItem & { category: MenuCategory })[]> {
-    let query = db
+    const conditions = [];
+    if (categoryId) {
+      conditions.push(eq(menuItems.categoryId, categoryId));
+    }
+    if (search) {
+      conditions.push(like(menuItems.name, `%${search}%`));
+    }
+
+    const baseQuery = db
       .select({
         id: menuItems.id,
         categoryId: menuItems.categoryId,
@@ -131,19 +139,11 @@ export class DatabaseStorage implements IStorage {
       .from(menuItems)
       .innerJoin(menuCategories, eq(menuItems.categoryId, menuCategories.id));
 
-    const conditions = [];
-    if (categoryId) {
-      conditions.push(eq(menuItems.categoryId, categoryId));
-    }
-    if (search) {
-      conditions.push(like(menuItems.name, `%${search}%`));
-    }
-
     if (conditions.length > 0) {
-      query = query.where(and(...conditions));
+      return await baseQuery.where(and(...conditions)).orderBy(menuItems.name);
     }
 
-    return await query.orderBy(menuItems.name);
+    return await baseQuery.orderBy(menuItems.name);
   }
 
   async createMenuItem(item: InsertMenuItem): Promise<MenuItem> {
@@ -166,13 +166,13 @@ export class DatabaseStorage implements IStorage {
 
   // Event operations
   async getEvents(featured?: boolean): Promise<Event[]> {
-    let query = db.select().from(events);
+    const baseQuery = db.select().from(events);
     
     if (featured !== undefined) {
-      query = query.where(eq(events.isFeatured, featured));
+      return await baseQuery.where(eq(events.isFeatured, featured)).orderBy(events.dateTime);
     }
     
-    return await query.orderBy(events.dateTime);
+    return await baseQuery.orderBy(events.dateTime);
   }
 
   async createEvent(event: InsertEvent): Promise<Event> {
@@ -195,8 +195,6 @@ export class DatabaseStorage implements IStorage {
 
   // Reservation operations
   async getReservations(status?: string, date?: string): Promise<Reservation[]> {
-    let query = db.select().from(reservations);
-    
     const conditions = [];
     if (status) {
       conditions.push(eq(reservations.status, status as any));
@@ -213,11 +211,13 @@ export class DatabaseStorage implements IStorage {
       );
     }
 
+    const baseQuery = db.select().from(reservations);
+
     if (conditions.length > 0) {
-      query = query.where(and(...conditions));
+      return await baseQuery.where(and(...conditions)).orderBy(desc(reservations.dateTime));
     }
 
-    return await query.orderBy(desc(reservations.dateTime));
+    return await baseQuery.orderBy(desc(reservations.dateTime));
   }
 
   async createReservation(reservation: InsertReservation): Promise<Reservation> {
