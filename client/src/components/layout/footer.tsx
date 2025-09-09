@@ -60,14 +60,14 @@ export default function Footer() {
               </a>
             </div>
             <div className="space-y-2 text-sm">
-              <Link href="/menu">
-                <a className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-menu-footer">Menu</a>
+              <Link href="/menu" className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-menu-footer">
+                Menu
               </Link>
-              <Link href="/events">
-                <a className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-events-footer">Events</a>
+              <Link href="/events" className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-events-footer">
+                Events
               </Link>
-              <Link href="/reservations">
-                <a className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-reservations-footer">Reservations</a>
+              <Link href="/reservations" className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-reservations-footer">
+                Reservations
               </Link>
             </div>
           </div>
