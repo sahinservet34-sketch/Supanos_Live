@@ -27,21 +27,21 @@ export default function Navbar() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex space-x-8">
-              <Link href="/">
-                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-home-nav">Home</a>
+              <Link href="/" className="text-foreground hover:text-accent transition-colors" data-testid="link-home-nav">
+                Home
               </Link>
-              <Link href="/menu">
-                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-menu-nav">Menu</a>
+              <Link href="/menu" className="text-foreground hover:text-accent transition-colors" data-testid="link-menu-nav">
+                Menu
               </Link>
-              <Link href="/events">
-                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-events-nav">Events</a>
+              <Link href="/events" className="text-foreground hover:text-accent transition-colors" data-testid="link-events-nav">
+                Events
               </Link>
-              <Link href="/scores">
-                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-scores-nav">Scores</a>
+              <Link href="/scores" className="text-foreground hover:text-accent transition-colors" data-testid="link-scores-nav">
+                Scores
               </Link>
               {isAuthenticated && user?.role === 'admin' && (
-                <Link href="/admin/dashboard">
-                  <a className="text-foreground hover:text-accent transition-colors" data-testid="link-admin-nav">Admin</a>
+                <Link href="/admin/dashboard" className="text-foreground hover:text-accent transition-colors" data-testid="link-admin-nav">
+                  Admin
                 </Link>
               )}
             </div>
@@ -93,51 +93,46 @@ export default function Navbar() {
               <i className="fas fa-times text-2xl"></i>
             </button>
             
-            <Link href="/">
-              <a 
-                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-                data-testid="link-home-mobile"
-              >
-                HOME
-              </a>
+            <Link 
+              href="/" 
+              className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              data-testid="link-home-mobile"
+            >
+              HOME
             </Link>
-            <Link href="/menu">
-              <a 
-                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-                data-testid="link-menu-mobile"
-              >
-                MENU
-              </a>
+            <Link 
+              href="/menu" 
+              className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              data-testid="link-menu-mobile"
+            >
+              MENU
             </Link>
-            <Link href="/events">
-              <a 
-                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-                data-testid="link-events-mobile"
-              >
-                EVENTS
-              </a>
+            <Link 
+              href="/events" 
+              className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              data-testid="link-events-mobile"
+            >
+              EVENTS
             </Link>
-            <Link href="/scores">
-              <a 
-                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-                data-testid="link-scores-mobile"
-              >
-                SCORES
-              </a>
+            <Link 
+              href="/scores" 
+              className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              data-testid="link-scores-mobile"
+            >
+              SCORES
             </Link>
             {isAuthenticated && user?.role === 'admin' && (
-              <Link href="/admin/dashboard">
-                <a 
-                  className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  data-testid="link-admin-mobile"
-                >
-                  ADMIN
-                </a>
+              <Link 
+                href="/admin/dashboard" 
+                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="link-admin-mobile"
+              >
+                ADMIN
               </Link>
             )}
             
