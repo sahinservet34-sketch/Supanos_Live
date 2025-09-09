@@ -1,0 +1,174 @@
+import { useState } from "react";
+import { Link } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+
+export default function Navbar() {
+  const { isAuthenticated, user } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
+  };
+
+  return (
+    <>
+      <nav className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link href="/">
+                <h1 className="text-2xl font-display font-bold text-accent tracking-tight cursor-pointer" data-testid="link-home">
+                  SUPANO'S
+                </h1>
+              </Link>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex space-x-8">
+              <Link href="/">
+                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-home-nav">Home</a>
+              </Link>
+              <Link href="/menu">
+                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-menu-nav">Menu</a>
+              </Link>
+              <Link href="/events">
+                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-events-nav">Events</a>
+              </Link>
+              <Link href="/scores">
+                <a className="text-foreground hover:text-accent transition-colors" data-testid="link-scores-nav">Scores</a>
+              </Link>
+              {isAuthenticated && user?.role === 'admin' && (
+                <Link href="/admin/dashboard">
+                  <a className="text-foreground hover:text-accent transition-colors" data-testid="link-admin-nav">Admin</a>
+                </Link>
+              )}
+            </div>
+            
+            {/* CTA Button & Auth */}
+            <div className="flex items-center space-x-4">
+              <Link href="/reservations">
+                <Button className="bg-accent text-accent-foreground px-6 py-2 rounded-xl font-semibold hover:bg-gold-600 transition-all duration-200 transform hover:scale-105" data-testid="button-reserve-nav">
+                  Reserve a Table
+                </Button>
+              </Link>
+              
+              {isAuthenticated ? (
+                <div className="hidden md:flex items-center space-x-4">
+                  <span className="text-sm text-muted-foreground">Hello, {user?.firstName}</span>
+                  <Button variant="ghost" onClick={handleLogout} data-testid="button-logout">
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <Link href="/admin/login">
+                  <Button variant="ghost" className="hidden md:block" data-testid="button-login">
+                    Admin Login
+                  </Button>
+                </Link>
+              )}
+              
+              <button 
+                className="md:hidden text-foreground"
+                onClick={() => setIsMobileMenuOpen(true)}
+                data-testid="button-mobile-menu"
+              >
+                <i className="fas fa-bars"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 md:hidden" data-testid="mobile-menu-overlay">
+          <div className="flex flex-col items-center justify-center h-full space-y-8">
+            <button
+              className="absolute top-4 right-4 text-foreground"
+              onClick={() => setIsMobileMenuOpen(false)}
+              data-testid="button-close-mobile-menu"
+            >
+              <i className="fas fa-times text-2xl"></i>
+            </button>
+            
+            <Link href="/">
+              <a 
+                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="link-home-mobile"
+              >
+                HOME
+              </a>
+            </Link>
+            <Link href="/menu">
+              <a 
+                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="link-menu-mobile"
+              >
+                MENU
+              </a>
+            </Link>
+            <Link href="/events">
+              <a 
+                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="link-events-mobile"
+              >
+                EVENTS
+              </a>
+            </Link>
+            <Link href="/scores">
+              <a 
+                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="link-scores-mobile"
+              >
+                SCORES
+              </a>
+            </Link>
+            {isAuthenticated && user?.role === 'admin' && (
+              <Link href="/admin/dashboard">
+                <a 
+                  className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  data-testid="link-admin-mobile"
+                >
+                  ADMIN
+                </a>
+              </Link>
+            )}
+            
+            <Link href="/reservations">
+              <Button 
+                className="bg-accent text-accent-foreground px-8 py-4 rounded-xl font-semibold text-lg"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="button-reserve-mobile"
+              >
+                Reserve a Table
+              </Button>
+            </Link>
+            
+            {isAuthenticated ? (
+              <Button variant="ghost" onClick={handleLogout} data-testid="button-logout-mobile">
+                Logout ({user?.firstName})
+              </Button>
+            ) : (
+              <Link href="/admin/login">
+                <Button 
+                  variant="ghost"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  data-testid="button-login-mobile"
+                >
+                  Admin Login
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
