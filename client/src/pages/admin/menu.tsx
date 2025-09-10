@@ -229,9 +229,9 @@ export default function AdminMenu() {
         </div>
 
         <Tabs defaultValue="items" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="items">Menu Items</TabsTrigger>
-            <TabsTrigger value="categories">Categories</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="items" data-testid="tab-menu-items">Menu Items</TabsTrigger>
+            <TabsTrigger value="categories" data-testid="tab-categories">Categories</TabsTrigger>
           </TabsList>
 
           {/* Menu Items Tab */}
