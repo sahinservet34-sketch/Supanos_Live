@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
+import heroImage from "@assets/image_1757463179553.png";
 
 export default function Landing() {
   const { data: menuItems } = useQuery({
@@ -30,20 +31,19 @@ export default function Landing() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-arena relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-accent rounded-full"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 border border-accent rounded-full"></div>
-          <div className="absolute top-1/2 right-1/3 w-16 h-16 border border-accent rounded-full"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-foreground mb-6 tracking-tight uppercase">
+      <section 
+        className="relative overflow-hidden bg-cover bg-center bg-no-repeat min-h-[70vh]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${heroImage})`
+        }}
+      >
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 flex items-center justify-center min-h-[70vh]">
+          <div className="text-center w-full">
+            <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight uppercase">
               Game On at<br/>
               <span className="text-accent text-shadow-glow">Supano's</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
               The ultimate sports bar experience with live games, craft drinks, and mouth-watering food. 
               Where every game matters and every meal is memorable.
             </p>
