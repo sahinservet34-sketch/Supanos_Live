@@ -1,4 +1,3 @@
-import fs from "fs";
 import { defineConfig } from "drizzle-kit";
 
 if (!process.env.DATABASE_URL) {
@@ -12,8 +11,7 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.DATABASE_URL,
     ssl: {
-      rejectUnauthorized: true,
-      ca: fs.readFileSync("./certs/ca.crt", "utf8"),
+      ca: process.env.CA_CERT,   // DigitalOcean’dan otomatik geliyor
     },
   },
 });
