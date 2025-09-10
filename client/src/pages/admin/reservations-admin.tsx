@@ -27,12 +27,32 @@ export default function AdminReservations() {
 
   const updateReservation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      return apiRequest("PATCH", `/api/reservations/${id}`, { status });
+      return apiRequest(`/api/reservations/${id}`, "PATCH", { status });
     },
     onSuccess: () => {
       toast({
         title: "Reservation Updated",
         description: "Reservation status has been updated successfully.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/reservations"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteReservation = useMutation({
+    mutationFn: async (id: string) => {
+      return apiRequest(`/api/reservations/${id}`, "DELETE");
+    },
+    onSuccess: () => {
+      toast({
+        title: "Reservation Deleted",
+        description: "Reservation has been permanently deleted.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/reservations"] });
     },
@@ -195,6 +215,20 @@ export default function AdminReservations() {
                         Cancel
                       </Button>
                     )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        if (confirm('Bu rezervasyonu kalıcı olarak silmek istediğinizden emin misiniz?')) {
+                          deleteReservation.mutate(reservation.id);
+                        }
+                      }}
+                      disabled={deleteReservation.isPending}
+                      data-testid={`button-delete-${reservation.id}`}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      Remove
+                    </Button>
                   </div>
                 </div>
               </CardContent>

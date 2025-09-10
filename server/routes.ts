@@ -347,6 +347,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/events", async (req, res) => {
     try {
+      // Convert dateTime string to Date object if needed
+      if (req.body.dateTime && typeof req.body.dateTime === 'string') {
+        req.body.dateTime = new Date(req.body.dateTime);
+      }
       const validatedData = insertEventSchema.parse(req.body);
       const event = await dbStorage.createEvent(validatedData);
       res.json(event);
@@ -416,6 +420,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating reservation:", error);
       res.status(400).json({ message: "Failed to update reservation" });
+    }
+  });
+
+  app.delete("/api/reservations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await dbStorage.deleteReservation(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting reservation:", error);
+      res.status(400).json({ message: "Failed to delete reservation" });
     }
   });
 
