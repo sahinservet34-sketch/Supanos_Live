@@ -22,8 +22,8 @@ export default function Landing() {
     queryKey: ["/api/events"],
   });
 
-  const featuredMenuItems = menuItems?.slice(0, 3) || [];
-  const featuredEvents = events?.slice(0, 4) || [];
+  const featuredMenuItems = Array.isArray(menuItems) ? menuItems.slice(0, 3) : [];
+  const featuredEvents = Array.isArray(events) ? events.slice(0, 4) : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,7 +74,7 @@ export default function Landing() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredMenuItems.map((item) => (
+            {featuredMenuItems.map((item: any) => (
               <MenuItemCard key={item.id} item={item} />
             ))}
           </div>
@@ -100,7 +100,7 @@ export default function Landing() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredEvents.map((event) => (
+            {featuredEvents.map((event: any) => (
               <EventCard key={event.id} event={event} />
             ))}
           </div>

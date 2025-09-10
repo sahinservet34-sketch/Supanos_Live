@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage as dbStorage } from "./storage";
 import { 
   insertMenuCategorySchema,
   insertMenuItemSchema,
@@ -33,7 +33,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const upload = multer({ 
-    storage: storage,
+    storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     fileFilter: (req, file, cb) => {
       const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -83,7 +83,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password: z.string().min(1)
       }).parse(req.body);
 
-      const user = await storage.getUserByUsername(username);
+      const user = await dbStorage.getUserByUsername(username);
       if (!user || !user.isActive) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
