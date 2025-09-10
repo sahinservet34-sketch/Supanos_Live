@@ -1,6 +1,12 @@
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Facebook, Instagram, Twitter, Youtube, MapPin, Phone, Mail } from "lucide-react";
 
 export default function Footer() {
+  const { data: settings } = useQuery({
+    queryKey: ["/api/settings"],
+  });
+
   return (
     <footer className="bg-primary py-12 border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,9 +23,9 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-primary-foreground mb-4">Hours</h4>
             <div className="space-y-2 text-muted-foreground">
-              <p>Mon-Thu: 11AM - 12AM</p>
-              <p>Fri-Sat: 11AM - 2AM</p>
-              <p>Sunday: 10AM - 12AM</p>
+              <p>Mon-Thu: {settings?.hours?.monday || "11AM - 12AM"}</p>
+              <p>Fri-Sat: {settings?.hours?.friday || "11AM - 2AM"}</p>
+              <p>Sunday: {settings?.hours?.sunday || "10AM - 12AM"}</p>
             </div>
           </div>
 
@@ -27,17 +33,17 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-primary-foreground mb-4">Contact</h4>
             <div className="space-y-2 text-muted-foreground">
-              <p>
-                <i className="fas fa-map-marker-alt mr-2 text-accent"></i>
-                123 Sports Ave, Game City
+              <p className="flex items-center">
+                <MapPin className="mr-2 h-4 w-4 text-accent" />
+                {settings?.contact?.address || "123 Sports Ave, Game City"}
               </p>
-              <p>
-                <i className="fas fa-phone mr-2 text-accent"></i>
-                (555) 123-GAME
+              <p className="flex items-center">
+                <Phone className="mr-2 h-4 w-4 text-accent" />
+                {settings?.contact?.phone || "(555) 123-GAME"}
               </p>
-              <p>
-                <i className="fas fa-envelope mr-2 text-accent"></i>
-                info@supanos.bar
+              <p className="flex items-center">
+                <Mail className="mr-2 h-4 w-4 text-accent" />
+                {settings?.contact?.email || "info@supanos.bar"}
               </p>
             </div>
           </div>
@@ -46,18 +52,50 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-primary-foreground mb-4">Follow Us</h4>
             <div className="flex space-x-4 mb-6">
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors" data-testid="link-facebook">
-                <i className="fab fa-facebook-f text-xl"></i>
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors" data-testid="link-instagram">
-                <i className="fab fa-instagram text-xl"></i>
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors" data-testid="link-twitter">
-                <i className="fab fa-twitter text-xl"></i>
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors" data-testid="link-youtube">
-                <i className="fab fa-youtube text-xl"></i>
-              </a>
+              {settings?.social?.facebook && (
+                <a 
+                  href={settings.social.facebook} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-accent transition-colors" 
+                  data-testid="link-facebook"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.social?.instagram && (
+                <a 
+                  href={settings.social.instagram} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-accent transition-colors" 
+                  data-testid="link-instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.social?.twitter && (
+                <a 
+                  href={settings.social.twitter} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-accent transition-colors" 
+                  data-testid="link-twitter"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.social?.youtube && (
+                <a 
+                  href={settings.social.youtube} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-accent transition-colors" 
+                  data-testid="link-youtube"
+                >
+                  <Youtube className="h-5 w-5" />
+                </a>
+              )}
             </div>
             <div className="space-y-2 text-sm">
               <Link href="/menu" className="text-muted-foreground hover:text-accent transition-colors block" data-testid="link-menu-footer">
