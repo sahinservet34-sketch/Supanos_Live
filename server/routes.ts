@@ -41,7 +41,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/menu/categories", isAuthenticated, async (req, res) => {
+  app.post("/api/menu/categories", async (req, res) => {
     try {
       const validatedData = insertMenuCategorySchema.parse(req.body);
       const category = await storage.createMenuCategory(validatedData);
@@ -67,7 +67,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/menu/items", isAuthenticated, async (req, res) => {
+  app.post("/api/menu/items", async (req, res) => {
     try {
       const validatedData = insertMenuItemSchema.parse(req.body);
       const item = await storage.createMenuItem(validatedData);
@@ -78,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/menu/items/:id", isAuthenticated, async (req, res) => {
+  app.patch("/api/menu/items/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const validatedData = insertMenuItemSchema.partial().parse(req.body);
@@ -90,7 +90,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/menu/items/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/menu/items/:id", async (req, res) => {
     try {
       const { id } = req.params;
       await storage.deleteMenuItem(id);
@@ -115,7 +115,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/events", isAuthenticated, async (req, res) => {
+  app.post("/api/events", async (req, res) => {
     try {
       const validatedData = insertEventSchema.parse(req.body);
       const event = await storage.createEvent(validatedData);
@@ -126,7 +126,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/events/:id", isAuthenticated, async (req, res) => {
+  app.patch("/api/events/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const validatedData = insertEventSchema.partial().parse(req.body);
@@ -138,7 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/events/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/events/:id", async (req, res) => {
     try {
       const { id } = req.params;
       await storage.deleteEvent(id);
@@ -162,7 +162,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/reservations", isAuthenticated, async (req, res) => {
+  app.get("/api/reservations", async (req, res) => {
     try {
       const { status, date } = req.query;
       const reservations = await storage.getReservations(
@@ -176,7 +176,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/reservations/:id", isAuthenticated, async (req, res) => {
+  app.patch("/api/reservations/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const validatedData = insertReservationSchema.partial().parse(req.body);
@@ -238,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Settings
-  app.get("/api/settings", isAuthenticated, async (req, res) => {
+  app.get("/api/settings", async (req, res) => {
     try {
       const settings = await storage.getSettings();
       res.json(settings);
@@ -248,7 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/settings", isAuthenticated, async (req, res) => {
+  app.post("/api/settings", async (req, res) => {
     try {
       const validatedData = insertSettingSchema.parse(req.body);
       const setting = await storage.upsertSetting(validatedData);

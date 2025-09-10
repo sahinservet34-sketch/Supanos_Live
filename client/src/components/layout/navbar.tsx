@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
-  const { isAuthenticated, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Remove authentication dependencies - admin always accessible
+  const isAuthenticated = false;
+  const user = null;
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
@@ -39,11 +41,9 @@ export default function Navbar() {
               <Link href="/scores" className="text-foreground hover:text-accent transition-colors" data-testid="link-scores-nav">
                 Scores
               </Link>
-              {isAuthenticated && user?.role === 'admin' && (
-                <Link href="/admin/dashboard" className="text-foreground hover:text-accent transition-colors" data-testid="link-admin-nav">
-                  Admin
-                </Link>
-              )}
+              <Link href="/admin/dashboard" className="text-foreground hover:text-accent transition-colors" data-testid="link-admin-nav">
+                Admin
+              </Link>
             </div>
             
             {/* CTA Button & Auth */}
@@ -54,20 +54,11 @@ export default function Navbar() {
                 </Button>
               </Link>
               
-              {isAuthenticated ? (
-                <div className="hidden md:flex items-center space-x-4">
-                  <span className="text-sm text-muted-foreground">Hello, {user?.firstName}</span>
-                  <Button variant="ghost" onClick={handleLogout} data-testid="button-logout">
-                    Logout
-                  </Button>
-                </div>
-              ) : (
-                <Link href="/admin/login">
-                  <Button variant="ghost" className="hidden md:block" data-testid="button-login">
-                    Admin Login
-                  </Button>
-                </Link>
-              )}
+              <Link href="/admin/login">
+                <Button variant="ghost" className="hidden md:block" data-testid="button-login">
+                  Admin Login
+                </Button>
+              </Link>
               
               <button 
                 className="md:hidden text-foreground"
@@ -125,16 +116,14 @@ export default function Navbar() {
             >
               SCORES
             </Link>
-            {isAuthenticated && user?.role === 'admin' && (
-              <Link 
-                href="/admin/dashboard" 
-                className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-                data-testid="link-admin-mobile"
-              >
-                ADMIN
-              </Link>
-            )}
+            <Link 
+              href="/admin/dashboard" 
+              className="text-2xl font-display text-foreground hover:text-accent transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              data-testid="link-admin-mobile"
+            >
+              ADMIN
+            </Link>
             
             <Link href="/reservations">
               <Button 
@@ -146,21 +135,15 @@ export default function Navbar() {
               </Button>
             </Link>
             
-            {isAuthenticated ? (
-              <Button variant="ghost" onClick={handleLogout} data-testid="button-logout-mobile">
-                Logout ({user?.firstName})
+            <Link href="/admin/login">
+              <Button 
+                variant="ghost"
+                onClick={() => setIsMobileMenuOpen(false)}
+                data-testid="button-login-mobile"
+              >
+                Admin Login
               </Button>
-            ) : (
-              <Link href="/admin/login">
-                <Button 
-                  variant="ghost"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  data-testid="button-login-mobile"
-                >
-                  Admin Login
-                </Button>
-              </Link>
-            )}
+            </Link>
           </div>
         </div>
       )}
