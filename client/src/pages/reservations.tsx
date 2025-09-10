@@ -46,7 +46,7 @@ export default function Reservations() {
   const reservation = useMutation({
     mutationFn: async (data: ReservationForm) => {
       const dateTime = new Date(data.dateTime).toISOString();
-      return apiRequest("POST", "/api/reservations", { ...data, dateTime });
+      return apiRequest("/api/reservations", "POST", { ...data, dateTime });
     },
     onSuccess: () => {
       setIsSubmitted(true);

@@ -80,7 +80,7 @@ export default function AdminMenu() {
   // Category mutations
   const createCategory = useMutation({
     mutationFn: async (data: CategoryForm) => {
-      return apiRequest("POST", "/api/menu/categories", data);
+      return apiRequest("/api/menu/categories", "POST", data);
     },
     onSuccess: () => {
       toast({
@@ -103,7 +103,7 @@ export default function AdminMenu() {
 
   const updateCategory = useMutation({
     mutationFn: async (data: { id: string; updates: Partial<CategoryForm> }) => {
-      return apiRequest("PATCH", `/api/menu/categories/${data.id}`, data.updates);
+      return apiRequest(`/api/menu/categories/${data.id}`, "PATCH", data.updates);
     },
     onSuccess: () => {
       toast({
@@ -126,7 +126,7 @@ export default function AdminMenu() {
 
   const deleteCategory = useMutation({
     mutationFn: async (id: string) => {
-      return apiRequest("DELETE", `/api/menu/categories/${id}`);
+      return apiRequest(`/api/menu/categories/${id}`, "DELETE");
     },
     onSuccess: () => {
       toast({
@@ -153,7 +153,7 @@ export default function AdminMenu() {
         price: parseFloat(data.price),
         tags: data.tags ? data.tags.split(",").map(tag => tag.trim()) : [],
       };
-      return apiRequest("POST", "/api/menu/items", formattedData);
+      return apiRequest("/api/menu/items", "POST", formattedData);
     },
     onSuccess: () => {
       toast({
@@ -176,7 +176,7 @@ export default function AdminMenu() {
 
   const deleteItem = useMutation({
     mutationFn: async (id: string) => {
-      return apiRequest("DELETE", `/api/menu/items/${id}`);
+      return apiRequest(`/api/menu/items/${id}`, "DELETE");
     },
     onSuccess: () => {
       toast({
