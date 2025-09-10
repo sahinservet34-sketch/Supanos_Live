@@ -19,38 +19,25 @@ import AdminReservations from "@/pages/admin/reservations-admin";
 import AdminSettings from "@/pages/admin/settings";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
-
   return (
     <Switch>
-      {isLoading ? (
-        <Route path="/" component={() => <div>Loading...</div>} />
-      ) : !isAuthenticated ? (
-        <>
-          <Route path="/" component={Landing} />
-          <Route path="/menu" component={Menu} />
-          <Route path="/events" component={Events} />
-          <Route path="/reservations" component={Reservations} />
-          <Route path="/scores" component={Scores} />
-          <Route path="/admin/login" component={AdminLogin} />
-          <Route component={NotFound} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={Home} />
-          <Route path="/menu" component={Menu} />
-          <Route path="/events" component={Events} />
-          <Route path="/reservations" component={Reservations} />
-          <Route path="/scores" component={Scores} />
-          <Route path="/admin" component={AdminDashboard} />
-          <Route path="/admin/dashboard" component={AdminDashboard} />
-          <Route path="/admin/menu" component={AdminMenu} />
-          <Route path="/admin/events" component={AdminEvents} />
-          <Route path="/admin/reservations" component={AdminReservations} />
-          <Route path="/admin/settings" component={AdminSettings} />
-          <Route component={NotFound} />
-        </>
-      )}
+      {/* Public routes - always accessible */}
+      <Route path="/" component={Landing} />
+      <Route path="/menu" component={Menu} />
+      <Route path="/events" component={Events} />
+      <Route path="/reservations" component={Reservations} />
+      <Route path="/scores" component={Scores} />
+      
+      {/* Admin routes - accessible without authentication */}
+      <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/menu" component={AdminMenu} />
+      <Route path="/admin/events" component={AdminEvents} />
+      <Route path="/admin/reservations" component={AdminReservations} />
+      <Route path="/admin/settings" component={AdminSettings} />
+      
+      <Route component={NotFound} />
     </Switch>
   );
 }
