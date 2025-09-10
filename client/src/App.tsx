@@ -19,6 +19,22 @@ import AdminReservations from "@/pages/admin/reservations-admin";
 import AdminUsers from "@/pages/admin/users";
 import AdminSettings from "@/pages/admin/settings";
 
+function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
+  const { isAdmin, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-foreground">Loading...</div>
+    </div>;
+  }
+  
+  if (!isAdmin) {
+    return <AdminLogin />;
+  }
+  
+  return <>{children}</>;
+}
+
 function Router() {
   return (
     <Switch>
@@ -29,15 +45,17 @@ function Router() {
       <Route path="/reservations" component={Reservations} />
       <Route path="/scores" component={Scores} />
       
-      {/* Admin routes - accessible without authentication */}
+      {/* Admin login - always accessible */}
       <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={AdminDashboard} />
-      <Route path="/admin/dashboard" component={AdminDashboard} />
-      <Route path="/admin/menu" component={AdminMenu} />
-      <Route path="/admin/events" component={AdminEvents} />
-      <Route path="/admin/reservations" component={AdminReservations} />
-      <Route path="/admin/users" component={AdminUsers} />
-      <Route path="/admin/settings" component={AdminSettings} />
+      
+      {/* Protected admin routes - require admin authentication */}
+      <Route path="/admin" component={() => <ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
+      <Route path="/admin/dashboard" component={() => <ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
+      <Route path="/admin/menu" component={() => <ProtectedAdminRoute><AdminMenu /></ProtectedAdminRoute>} />
+      <Route path="/admin/events" component={() => <ProtectedAdminRoute><AdminEvents /></ProtectedAdminRoute>} />
+      <Route path="/admin/reservations" component={() => <ProtectedAdminRoute><AdminReservations /></ProtectedAdminRoute>} />
+      <Route path="/admin/users" component={() => <ProtectedAdminRoute><AdminUsers /></ProtectedAdminRoute>} />
+      <Route path="/admin/settings" component={() => <ProtectedAdminRoute><AdminSettings /></ProtectedAdminRoute>} />
       
       <Route component={NotFound} />
     </Switch>
