@@ -1,9 +1,12 @@
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function AdminLogin() {
-  const handleLogin = () => {
-    window.location.href = "/api/login";
+  const [, setLocation] = useLocation();
+
+  const handleAdminAccess = () => {
+    setLocation("/admin/dashboard");
   };
 
   return (
@@ -17,17 +20,17 @@ export default function AdminLogin() {
           
           <div className="space-y-4">
             <Button 
-              onClick={handleLogin}
+              onClick={handleAdminAccess}
               className="w-full bg-accent text-accent-foreground hover:bg-gold-600 py-3"
-              data-testid="button-admin-login"
+              data-testid="button-admin-access"
             >
-              Sign In with Replit
+              Access Admin Panel
             </Button>
           </div>
           
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Only authorized staff can access the admin panel
+              Admin panel for managing content
             </p>
           </div>
         </CardContent>
