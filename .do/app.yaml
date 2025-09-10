@@ -17,7 +17,7 @@ services:
   - key: DATABASE_URL
     value: ${db.DATABASE_URL}
   - key: SESSION_SECRET
-    value: ${APP_SESSION_SECRET}
+    value: "super-secret-production-key-2025-coral-app"
   - key: PORT
     value: "8080"
   http_port: 8080
