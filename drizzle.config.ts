@@ -6,14 +6,14 @@ if (!process.env.DATABASE_URL) {
 }
 
 export default defineConfig({
-  out: "./migrations",               // Migration dosyalarının çıkacağı klasör
-  schema: "./shared/schema.ts",      // Şema dosyan
+  out: "./migrations",
+  schema: "./shared/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,   // ✅ Artık connectionString yerine url
+    url: process.env.DATABASE_URL,
     ssl: {
-      rejectUnauthorized: true,      // SSL doğrulama
-      ca: fs.readFileSync("./certs/ca.crt", "utf8"), // DigitalOcean’dan aldığın CA
+      rejectUnauthorized: true,
+      ca: fs.readFileSync("./certs/ca.crt", "utf8"),
     },
   },
 });
