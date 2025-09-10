@@ -8,19 +8,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { isUnauthorizedError } from "@/lib/authUtils";
 
 export default function AdminReservations() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("");
 
   const { data: reservations } = useQuery({
     queryKey: ["/api/reservations", statusFilter, dateFilter],
     queryFn: () => {
       const params = new URLSearchParams();
-      if (statusFilter) params.append("status", statusFilter);
+      if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
       if (dateFilter) params.append("date", dateFilter);
       return fetch(`/api/reservations?${params}`).then(res => res.json());
     },
@@ -38,17 +37,6 @@ export default function AdminReservations() {
       queryClient.invalidateQueries({ queryKey: ["/api/reservations"] });
     },
     onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
       toast({
         title: "Error",
         description: error.message,
@@ -99,7 +87,7 @@ export default function AdminReservations() {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="confirmed">Confirmed</SelectItem>
                 <SelectItem value="cancelled">Cancelled</SelectItem>
@@ -118,7 +106,7 @@ export default function AdminReservations() {
           <Button
             variant="outline"
             onClick={() => {
-              setStatusFilter("");
+              setStatusFilter("all");
               setDateFilter("");
             }}
             data-testid="button-clear-filters"
@@ -129,7 +117,7 @@ export default function AdminReservations() {
 
         {/* Reservations Grid */}
         <div className="grid grid-cols-1 gap-4">
-          {reservations?.map((reservation) => (
+          {Array.isArray(reservations) && reservations.map((reservation: any) => (
             <Card key={reservation.id} className="card-shadow" data-testid={`card-reservation-${reservation.id}`}>
               <CardContent className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -214,7 +202,7 @@ export default function AdminReservations() {
           ))}
         </div>
 
-        {!reservations?.length && (
+        {(!Array.isArray(reservations) || reservations.length === 0) && (
           <div className="text-center py-12" data-testid="text-no-reservations">
             <p className="text-xl text-muted-foreground">No reservations found</p>
           </div>
