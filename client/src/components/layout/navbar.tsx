@@ -54,11 +54,6 @@ export default function Navbar() {
                 </Button>
               </Link>
               
-              <Link href="/admin/login">
-                <Button variant="ghost" className="hidden md:block" data-testid="button-login">
-                  Admin Login
-                </Button>
-              </Link>
               
               <button 
                 className="md:hidden text-foreground"
@@ -135,15 +130,6 @@ export default function Navbar() {
               </Button>
             </Link>
             
-            <Link href="/admin/login">
-              <Button 
-                variant="ghost"
-                onClick={() => setIsMobileMenuOpen(false)}
-                data-testid="button-login-mobile"
-              >
-                Admin Login
-              </Button>
-            </Link>
           </div>
         </div>
       )}
