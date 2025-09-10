@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import AdminLayout from "@/components/admin-layout";
-import { Plus, User } from "lucide-react";
+import { Plus, User, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -60,6 +60,26 @@ export default function AdminUsers() {
       toast({
         title: "Error",
         description: error.message || "Failed to create user",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      return apiRequest(`/api/users/${userId}`, "DELETE");
+    },
+    onSuccess: () => {
+      toast({
+        title: "User deleted",
+        description: "User has been deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/users"] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete user",
         variant: "destructive",
       });
     },
@@ -255,10 +275,20 @@ export default function AdminUsers() {
                   <p className="text-xs text-muted-foreground" data-testid={`text-created-${user.id}`}>
                     Created: {new Date(user.createdAt).toLocaleDateString()}
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between">
                     <Badge variant={user.isActive ? "default" : "secondary"} data-testid={`badge-status-${user.id}`}>
                       {user.isActive ? "Active" : "Inactive"}
                     </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteUserMutation.mutate(user.id)}
+                      disabled={deleteUserMutation.isPending}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      data-testid={`button-delete-user-${user.id}`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -32,6 +33,8 @@ export default function AdminEvents() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
   const { data: events } = useQuery({
     queryKey: ["/api/events"],
@@ -55,7 +58,7 @@ export default function AdminEvents() {
         ...data,
         dateTime: new Date(data.dateTime).toISOString(),
       };
-      return apiRequest("POST", "/api/events", formattedData);
+      return apiRequest("/api/events", "POST", formattedData);
     },
     onSuccess: () => {
       toast({
@@ -65,6 +68,7 @@ export default function AdminEvents() {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       setIsDialogOpen(false);
       form.reset();
+      setUploadedImageUrl(null);
     },
     onError: (error) => {
       if (isUnauthorizedError(error)) {
@@ -88,7 +92,7 @@ export default function AdminEvents() {
 
   const deleteEvent = useMutation({
     mutationFn: async (id: string) => {
-      return apiRequest("DELETE", `/api/events/${id}`);
+      return apiRequest(`/api/events/${id}`, "DELETE");
     },
     onSuccess: () => {
       toast({
@@ -209,19 +213,77 @@ export default function AdminEvents() {
                     />
                   </div>
 
-                  <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Image URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://..." {...field} data-testid="input-event-image" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                  <div className="space-y-4">
+                    <Label>Event Image</Label>
+                    {uploadedImageUrl && (
+                      <div className="space-y-2">
+                        <img 
+                          src={uploadedImageUrl} 
+                          alt="Event preview" 
+                          className="w-full h-32 object-cover rounded-md border"
+                        />
+                      </div>
                     )}
-                  />
+                    <div className="flex items-center gap-4">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+
+                          setUploading(true);
+                          try {
+                            const formData = new FormData();
+                            formData.append('image', file);
+
+                            const response = await fetch('/api/upload', {
+                              method: 'POST',
+                              body: formData,
+                            });
+
+                            if (!response.ok) throw new Error('Upload failed');
+
+                            const { imageUrl } = await response.json();
+                            setUploadedImageUrl(imageUrl);
+                            form.setValue('imageUrl', imageUrl);
+                          } catch (error) {
+                            toast({
+                              title: "Upload Failed",
+                              description: "Failed to upload event image",
+                              variant: "destructive",
+                            });
+                          } finally {
+                            setUploading(false);
+                          }
+                        }}
+                        disabled={uploading}
+                        className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-accent file:text-accent-foreground"
+                      />
+                      {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="imageUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Or Image URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="https://..." 
+                              {...field} 
+                              data-testid="input-event-image" 
+                              onChange={(e) => {
+                                field.onChange(e);
+                                setUploadedImageUrl(e.target.value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <FormField
                     control={form.control}
