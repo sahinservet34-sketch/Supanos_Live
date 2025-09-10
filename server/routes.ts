@@ -147,7 +147,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
       
-      const user = await storage.createUser({
+      const user = await dbStorage.createUser({
         ...userData,
         password: hashedPassword
       });
@@ -175,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Admin access required" });
       }
 
-      const users = await storage.getAllUsers();
+      const users = await dbStorage.getAllUsers();
       const safeUsers = users.map(user => ({
         id: user.id,
         username: user.username,
@@ -212,7 +212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Menu Categories
   app.get("/api/menu/categories", async (req, res) => {
     try {
-      const categories = await storage.getMenuCategories();
+      const categories = await dbStorage.getMenuCategories();
       res.json(categories);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -223,7 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/menu/categories", async (req, res) => {
     try {
       const validatedData = insertMenuCategorySchema.parse(req.body);
-      const category = await storage.createMenuCategory(validatedData);
+      const category = await dbStorage.createMenuCategory(validatedData);
       res.json(category);
     } catch (error) {
       console.error("Error creating category:", error);
@@ -235,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/menu/items", async (req, res) => {
     try {
       const { categoryId, search } = req.query;
-      const items = await storage.getMenuItems(
+      const items = await dbStorage.getMenuItems(
         categoryId as string,
         search as string
       );
@@ -249,7 +249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/menu/items", async (req, res) => {
     try {
       const validatedData = insertMenuItemSchema.parse(req.body);
-      const item = await storage.createMenuItem(validatedData);
+      const item = await dbStorage.createMenuItem(validatedData);
       res.json(item);
     } catch (error) {
       console.error("Error creating menu item:", error);
@@ -261,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const validatedData = insertMenuItemSchema.partial().parse(req.body);
-      const item = await storage.updateMenuItem(id, validatedData);
+      const item = await dbStorage.updateMenuItem(id, validatedData);
       res.json(item);
     } catch (error) {
       console.error("Error updating menu item:", error);
@@ -272,7 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/menu/items/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      await storage.deleteMenuItem(id);
+      await dbStorage.deleteMenuItem(id);
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting menu item:", error);
@@ -284,7 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/events", async (req, res) => {
     try {
       const { featured } = req.query;
-      const events = await storage.getEvents(
+      const events = await dbStorage.getEvents(
         featured === "1" ? true : undefined
       );
       res.json(events);
@@ -297,7 +297,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/events", async (req, res) => {
     try {
       const validatedData = insertEventSchema.parse(req.body);
-      const event = await storage.createEvent(validatedData);
+      const event = await dbStorage.createEvent(validatedData);
       res.json(event);
     } catch (error) {
       console.error("Error creating event:", error);
@@ -309,7 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const validatedData = insertEventSchema.partial().parse(req.body);
-      const event = await storage.updateEvent(id, validatedData);
+      const event = await dbStorage.updateEvent(id, validatedData);
       res.json(event);
     } catch (error) {
       console.error("Error updating event:", error);
@@ -320,7 +320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/events/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      await storage.deleteEvent(id);
+      await dbStorage.deleteEvent(id);
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting event:", error);
@@ -332,7 +332,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/reservations", async (req, res) => {
     try {
       const validatedData = insertReservationSchema.parse(req.body);
-      const reservation = await storage.createReservation(validatedData);
+      const reservation = await dbStorage.createReservation(validatedData);
       // TODO: Send confirmation email
       res.json(reservation);
     } catch (error) {
@@ -344,7 +344,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/reservations", async (req, res) => {
     try {
       const { status, date } = req.query;
-      const reservations = await storage.getReservations(
+      const reservations = await dbStorage.getReservations(
         status as string,
         date as string
       );
@@ -359,7 +359,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const validatedData = insertReservationSchema.partial().parse(req.body);
-      const reservation = await storage.updateReservation(id, validatedData);
+      const reservation = await dbStorage.updateReservation(id, validatedData);
       // TODO: Send status update email
       res.json(reservation);
     } catch (error) {
@@ -419,7 +419,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Settings
   app.get("/api/settings", async (req, res) => {
     try {
-      const settings = await storage.getSettings();
+      const settings = await dbStorage.getSettings();
       res.json(settings);
     } catch (error) {
       console.error("Error fetching settings:", error);
@@ -430,7 +430,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/settings", async (req, res) => {
     try {
       const validatedData = insertSettingSchema.parse(req.body);
-      const setting = await storage.upsertSetting(validatedData);
+      const setting = await dbStorage.upsertSetting(validatedData);
       res.json(setting);
     } catch (error) {
       console.error("Error saving setting:", error);

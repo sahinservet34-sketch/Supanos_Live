@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
-import heroImage from "@assets/image_1757463179553.png";
+import heroImage from "@assets/image_1757479212221.png";
 
 export default function Landing() {
   const { data: menuItems } = useQuery({
