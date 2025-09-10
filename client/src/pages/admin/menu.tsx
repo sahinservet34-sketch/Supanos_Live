@@ -150,7 +150,7 @@ export default function AdminMenu() {
     mutationFn: async (data: MenuItemForm) => {
       const formattedData = {
         ...data,
-        price: parseFloat(data.price),
+        price: data.price, // Keep as string - schema expects string
         tags: data.tags ? data.tags.split(",").map(tag => tag.trim()) : [],
       };
       return apiRequest("/api/menu/items", "POST", formattedData);
