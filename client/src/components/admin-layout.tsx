@@ -30,34 +30,34 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               
               <nav className="hidden md:flex space-x-6">
                 <Link href="/admin/dashboard">
-                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-dashboard">
+                  <span className="text-foreground hover:text-accent transition-colors text-sm cursor-pointer" data-testid="link-dashboard">
                     Dashboard
-                  </a>
+                  </span>
                 </Link>
                 <Link href="/admin/menu">
-                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-menu-admin">
+                  <span className="text-foreground hover:text-accent transition-colors text-sm cursor-pointer" data-testid="link-menu-admin">
                     Menu
-                  </a>
+                  </span>
                 </Link>
                 <Link href="/admin/events">
-                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-events-admin">
+                  <span className="text-foreground hover:text-accent transition-colors text-sm cursor-pointer" data-testid="link-events-admin">
                     Events
-                  </a>
+                  </span>
                 </Link>
                 <Link href="/admin/reservations">
-                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-reservations-admin">
+                  <span className="text-foreground hover:text-accent transition-colors text-sm cursor-pointer" data-testid="link-reservations-admin">
                     Reservations
-                  </a>
+                  </span>
                 </Link>
                 <Link href="/admin/users">
-                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-users-admin">
+                  <span className="text-foreground hover:text-accent transition-colors text-sm cursor-pointer" data-testid="link-users-admin">
                     Users
-                  </a>
+                  </span>
                 </Link>
                 <Link href="/admin/settings">
-                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-settings-admin">
+                  <span className="text-foreground hover:text-accent transition-colors text-sm cursor-pointer" data-testid="link-settings-admin">
                     Settings
-                  </a>
+                  </span>
                 </Link>
               </nav>
             </div>
@@ -85,34 +85,34 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-4 py-3 overflow-x-auto scrollbar-hide">
             <Link href="/admin/dashboard">
-              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-dashboard-mobile">
+              <span className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap cursor-pointer" data-testid="link-dashboard-mobile">
                 Dashboard
-              </a>
+              </span>
             </Link>
             <Link href="/admin/menu">
-              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-menu-mobile">
+              <span className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap cursor-pointer" data-testid="link-menu-mobile">
                 Menu
-              </a>
+              </span>
             </Link>
             <Link href="/admin/events">
-              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-events-mobile">
+              <span className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap cursor-pointer" data-testid="link-events-mobile">
                 Events
-              </a>
+              </span>
             </Link>
             <Link href="/admin/reservations">
-              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-reservations-mobile">
+              <span className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap cursor-pointer" data-testid="link-reservations-mobile">
                 Reservations
-              </a>
+              </span>
             </Link>
             <Link href="/admin/users">
-              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-users-mobile">
+              <span className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap cursor-pointer" data-testid="link-users-mobile">
                 Users
-              </a>
+              </span>
             </Link>
             <Link href="/admin/settings">
-              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-settings-mobile">
+              <span className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap cursor-pointer" data-testid="link-settings-mobile">
                 Settings
-              </a>
+              </span>
             </Link>
           </div>
         </div>
