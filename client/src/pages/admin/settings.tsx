@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { Upload, Image as ImageIcon } from "lucide-react";
 
 const settingsSchema = z.object({
   hours: z.object({
@@ -41,6 +43,133 @@ const settingsSchema = z.object({
 });
 
 type SettingsForm = z.infer<typeof settingsSchema>;
+
+function HeroImageUpload() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [uploading, setUploading] = useState(false);
+  const [currentHeroImage, setCurrentHeroImage] = useState<string | null>(null);
+
+  const { data: settings } = useQuery({
+    queryKey: ["/api/settings"],
+    select: (data) => {
+      const heroImageSetting = data?.find((s: any) => s.key === 'heroImage');
+      return heroImageSetting?.value || null;
+    }
+  });
+
+  const updateHeroImage = useMutation({
+    mutationFn: async (imageUrl: string) => {
+      return apiRequest("/api/settings", "POST", { 
+        key: "heroImage", 
+        value: imageUrl 
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Hero Image Updated",
+        description: "Hero background image has been updated successfully.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/settings"] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update hero image",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const { imageUrl } = await response.json();
+      setCurrentHeroImage(imageUrl);
+      updateHeroImage.mutate(imageUrl);
+    } catch (error) {
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload hero image",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <Card className="card-shadow">
+      <CardHeader>
+        <CardTitle className="text-xl font-display uppercase">Hero Background Image</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {(settings || currentHeroImage) && (
+          <div className="space-y-2">
+            <Label>Current Hero Image</Label>
+            <div className="relative">
+              <img 
+                src={currentHeroImage || settings} 
+                alt="Current hero background" 
+                className="w-full h-32 object-cover rounded-md border"
+              />
+            </div>
+          </div>
+        )}
+        
+        <div className="space-y-2">
+          <Label htmlFor="hero-image">Upload New Hero Image</Label>
+          <div className="flex items-center gap-4">
+            <Input
+              id="hero-image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={uploading}
+              className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-accent file:text-accent-foreground"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploading}
+              className="flex items-center gap-2"
+            >
+              {uploading ? (
+                <>
+                  <Upload className="w-4 h-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <ImageIcon className="w-4 h-4" />
+                  Upload Image
+                </>
+              )}
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Recommended size: 1920x1080px. Supported formats: JPG, PNG, WebP
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function AdminSettings() {
   const { toast } = useToast();
@@ -82,7 +211,7 @@ export default function AdminSettings() {
 
   const updateSetting = useMutation({
     mutationFn: async ({ key, value }: { key: string; value: any }) => {
-      return apiRequest("POST", "/api/settings", { key, value });
+      return apiRequest("/api/settings", "POST", { key, value });
     },
     onSuccess: () => {
       toast({
@@ -240,6 +369,9 @@ export default function AdminSettings() {
                 />
               </CardContent>
             </Card>
+
+            {/* Hero Background Image */}
+            <HeroImageUpload />
 
             {/* Social Media */}
             <Card className="card-shadow">

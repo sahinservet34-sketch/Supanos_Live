@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
-import heroImage from "@assets/image_1757479212221.png";
+import defaultHeroImage from "@assets/image_1757479212221.png";
 
 export default function Landing() {
   const { data: menuItems } = useQuery({
@@ -22,8 +22,17 @@ export default function Landing() {
     queryKey: ["/api/events"],
   });
 
+  const { data: settings } = useQuery({
+    queryKey: ["/api/settings"],
+  });
+
   const featuredMenuItems = Array.isArray(menuItems) ? menuItems.slice(0, 3) : [];
   const featuredEvents = Array.isArray(events) ? events.slice(0, 4) : [];
+  
+  // Get hero image from settings or use default
+  const heroImageSetting = Array.isArray(settings) ? 
+    settings.find((s: any) => s.key === 'heroImage') : null;
+  const heroImage = heroImageSetting?.value || defaultHeroImage;
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,7 +43,7 @@ export default function Landing() {
       <section 
         className="relative overflow-hidden bg-cover bg-center bg-no-repeat min-h-[70vh]"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${heroImage})`
+          backgroundImage: heroImage ? `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${heroImage})` : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${defaultHeroImage})`
         }}
       >
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 flex items-center justify-center min-h-[70vh]">
