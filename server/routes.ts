@@ -386,6 +386,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reservations
   app.post("/api/reservations", async (req, res) => {
     try {
+      // Convert dateTime string to Date object if needed
+      if (req.body.dateTime && typeof req.body.dateTime === 'string') {
+        req.body.dateTime = new Date(req.body.dateTime);
+      }
       const validatedData = insertReservationSchema.parse(req.body);
       const reservation = await dbStorage.createReservation(validatedData);
       // TODO: Send confirmation email
