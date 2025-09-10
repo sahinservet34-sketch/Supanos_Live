@@ -261,7 +261,7 @@ export default function AdminSettings() {
             {/* Business Hours */}
             <Card className="card-shadow">
               <CardHeader>
-                <CardTitle className="text-xl font-display uppercase">Business Hours</CardTitle>
+                <CardTitle className="text-xl font-medium uppercase">Business Hours</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -288,7 +288,7 @@ export default function AdminSettings() {
             {/* Contact Information */}
             <Card className="card-shadow">
               <CardHeader>
-                <CardTitle className="text-xl font-display uppercase">Contact Information</CardTitle>
+                <CardTitle className="text-xl font-medium uppercase">Contact Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField
@@ -338,7 +338,7 @@ export default function AdminSettings() {
             {/* Hero Section */}
             <Card className="card-shadow">
               <CardHeader>
-                <CardTitle className="text-xl font-display uppercase">Hero Section</CardTitle>
+                <CardTitle className="text-xl font-medium uppercase">Hero Section</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField
@@ -376,7 +376,7 @@ export default function AdminSettings() {
             {/* Social Media */}
             <Card className="card-shadow">
               <CardHeader>
-                <CardTitle className="text-xl font-display uppercase">Social Media</CardTitle>
+                <CardTitle className="text-xl font-medium uppercase">Social Media</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

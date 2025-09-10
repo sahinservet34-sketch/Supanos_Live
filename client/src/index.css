@@ -147,3 +147,19 @@
 .animate-marquee {
   animation: marquee 30s linear infinite;
 }
+
+/* Fix for datetime-local input styling */
+input[type="datetime-local"] {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(var(--foreground-invert, 0.5));
+  cursor: pointer;
+}
+
+/* Dark mode support for datetime input */
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
