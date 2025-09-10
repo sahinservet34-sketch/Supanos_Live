@@ -5,12 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -26,7 +27,10 @@ export default function AdminLogin() {
         title: "Login successful",
         description: "Welcome to admin panel",
       });
-      setLocation("/admin/dashboard");
+      // Invalidate auth queries to refresh user state
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      // Use window.location to force page refresh and update auth state
+      window.location.href = "/admin/dashboard";
     },
     onError: (error: Error) => {
       toast({
