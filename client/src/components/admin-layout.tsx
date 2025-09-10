@@ -49,6 +49,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     Reservations
                   </a>
                 </Link>
+                <Link href="/admin/users">
+                  <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-users-admin">
+                    Users
+                  </a>
+                </Link>
                 <Link href="/admin/settings">
                   <a className="text-foreground hover:text-accent transition-colors text-sm" data-testid="link-settings-admin">
                     Settings
@@ -97,6 +102,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <Link href="/admin/reservations">
               <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-reservations-mobile">
                 Reservations
+              </a>
+            </Link>
+            <Link href="/admin/users">
+              <a className="text-foreground hover:text-accent transition-colors text-sm whitespace-nowrap" data-testid="link-users-mobile">
+                Users
               </a>
             </Link>
             <Link href="/admin/settings">
