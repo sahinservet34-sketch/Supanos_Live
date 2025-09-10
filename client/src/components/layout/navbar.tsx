@@ -41,9 +41,6 @@ export default function Navbar() {
               <Link href="/scores" className="text-foreground hover:text-accent transition-colors" data-testid="link-scores-nav">
                 Scores
               </Link>
-              <Link href="/admin/dashboard" className="text-foreground hover:text-accent transition-colors" data-testid="link-admin-nav">
-                Admin
-              </Link>
             </div>
             
             {/* CTA Button & Auth */}
@@ -110,14 +107,6 @@ export default function Navbar() {
               data-testid="link-scores-mobile"
             >
               SCORES
-            </Link>
-            <Link 
-              href="/admin/dashboard" 
-              className="text-2xl font-display text-foreground hover:text-accent transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-              data-testid="link-admin-mobile"
-            >
-              ADMIN
             </Link>
             
             <Link href="/reservations">
