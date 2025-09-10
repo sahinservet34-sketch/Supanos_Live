@@ -39,11 +39,7 @@ export default function Landing() {
       >
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 flex items-center justify-center min-h-[70vh]">
           <div className="text-center w-full">
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight uppercase">
-              Game On at<br/>
-              <span className="text-accent text-shadow-glow">Supano's</span>
-            </h1>
-            <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+            <p className="text-2xl md:text-3xl text-gray-200 mb-8 max-w-2xl mx-auto font-medium">
               The ultimate sports bar experience with live games, craft drinks, and mouth-watering food. 
               Where every game matters and every meal is memorable.
             </p>
