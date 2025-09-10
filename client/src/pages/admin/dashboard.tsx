@@ -17,11 +17,11 @@ export default function AdminDashboard() {
     queryKey: ["/api/events"],
   });
 
-  const todayReservations = reservations?.filter(r => 
+  const todayReservations = Array.isArray(reservations) ? reservations.filter((r: any) => 
     new Date(r.dateTime).toDateString() === new Date().toDateString()
-  ).length || 0;
+  ).length : 0;
 
-  const recentReservations = reservations?.slice(0, 3) || [];
+  const recentReservations = Array.isArray(reservations) ? reservations.slice(0, 3) : [];
 
   return (
     <AdminLayout>
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Menu Items</p>
-                  <p className="text-3xl font-numeric font-bold text-success" data-testid="stat-menu-items">{menuItems?.length || 0}</p>
+                  <p className="text-3xl font-numeric font-bold text-success" data-testid="stat-menu-items">{Array.isArray(menuItems) ? menuItems.length : 0}</p>
                 </div>
                 <i className="fas fa-utensils text-2xl text-success"></i>
               </div>
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Active Events</p>
-                  <p className="text-3xl font-numeric font-bold text-warning" data-testid="stat-active-events">{events?.length || 0}</p>
+                  <p className="text-3xl font-numeric font-bold text-warning" data-testid="stat-active-events">{Array.isArray(events) ? events.length : 0}</p>
                 </div>
                 <i className="fas fa-star text-2xl text-warning"></i>
               </div>
@@ -74,7 +74,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Total Reservations</p>
-                  <p className="text-3xl font-numeric font-bold text-accent" data-testid="stat-total-reservations">{reservations?.length || 0}</p>
+                  <p className="text-3xl font-numeric font-bold text-accent" data-testid="stat-total-reservations">{Array.isArray(reservations) ? reservations.length : 0}</p>
                 </div>
                 <i className="fas fa-clipboard-list text-2xl text-accent"></i>
               </div>
