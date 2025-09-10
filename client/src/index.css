@@ -166,16 +166,16 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 /* Custom Tab Styling for better visibility */
 [data-state="active"][role="tab"] {
-  background-color: hsl(120, 100%, 35%) !important; /* Green for active tab */
-  color: white !important;
-  border: 2px solid hsl(120, 100%, 25%) !important;
+  background-color: hsl(43, 65%, 59%) !important; /* Gold accent for active tab */
+  color: hsl(211, 69%, 14%) !important; /* Dark blue text */
+  border: 2px solid hsl(43, 70%, 48%) !important;
   font-weight: 600 !important;
 }
 
 [data-state="inactive"][role="tab"] {
-  background-color: hsl(0, 85%, 50%) !important; /* Red for inactive tab */
-  color: white !important;
-  border: 2px solid hsl(0, 85%, 40%) !important;
+  background-color: hsl(214, 62%, 30%) !important; /* Secondary blue for inactive tab */
+  color: hsl(43, 23%, 96%) !important; /* Light text */
+  border: 2px solid hsl(211, 69%, 14%) !important;
   font-weight: 500 !important;
 }
 
