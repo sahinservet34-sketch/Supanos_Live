@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +43,8 @@ export default function AdminMenu() {
   const [isMenuItemDialogOpen, setIsMenuItemDialogOpen] = useState(false);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
   const { data: categories } = useQuery({
     queryKey: ["/api/menu/categories"],
@@ -160,6 +163,7 @@ export default function AdminMenu() {
       queryClient.invalidateQueries({ queryKey: ["/api/menu/items"] });
       setIsMenuItemDialogOpen(false);
       menuItemForm.reset();
+      setUploadedImageUrl(null);
     },
     onError: (error) => {
       toast({
@@ -351,19 +355,77 @@ export default function AdminMenu() {
                         )}
                       />
 
-                      <FormField
-                        control={menuItemForm.control}
-                        name="imageUrl"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Image URL</FormLabel>
-                            <FormControl>
-                              <Input placeholder="https://..." {...field} data-testid="input-image-url" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                      <div className="space-y-4">
+                        <Label>Menu Item Image</Label>
+                        {uploadedImageUrl && (
+                          <div className="space-y-2">
+                            <img 
+                              src={uploadedImageUrl} 
+                              alt="Menu item preview" 
+                              className="w-full h-32 object-cover rounded-md border"
+                            />
+                          </div>
                         )}
-                      />
+                        <div className="flex flex-col gap-2">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+
+                              setUploading(true);
+                              try {
+                                const formData = new FormData();
+                                formData.append('image', file);
+
+                                const response = await fetch('/api/upload', {
+                                  method: 'POST',
+                                  body: formData,
+                                });
+
+                                if (!response.ok) throw new Error('Upload failed');
+
+                                const { imageUrl } = await response.json();
+                                setUploadedImageUrl(imageUrl);
+                                menuItemForm.setValue('imageUrl', imageUrl);
+                              } catch (error) {
+                                toast({
+                                  title: "Upload Failed",
+                                  description: "Failed to upload menu item image",
+                                  variant: "destructive",
+                                });
+                              } finally {
+                                setUploading(false);
+                              }
+                            }}
+                            disabled={uploading}
+                            className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-accent file:text-accent-foreground"
+                          />
+                          {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                        </div>
+                        <FormField
+                          control={menuItemForm.control}
+                          name="imageUrl"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Or Image URL</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="https://..." 
+                                  {...field} 
+                                  data-testid="input-image-url" 
+                                  onChange={(e) => {
+                                    field.onChange(e);
+                                    setUploadedImageUrl(e.target.value);
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
                       <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-gold-600" data-testid="button-submit-menu-item">
                         Create Menu Item
