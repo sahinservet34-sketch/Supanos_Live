@@ -1,14 +1,19 @@
 import fs from "fs";
 import { defineConfig } from "drizzle-kit";
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is required");
+}
+
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    connectionString: process.env.DATABASE_URL,   // ✅ url yerine connectionString
     ssl: {
-      ca: fs.readFileSync("./certs/ca.crt").toString(),
+      rejectUnauthorized: true,                   // ✅ kritik
+      ca: fs.readFileSync("./certs/ca.crt", "utf8"),
     },
   },
 });
