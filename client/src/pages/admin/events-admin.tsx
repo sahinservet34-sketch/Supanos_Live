@@ -36,10 +36,6 @@ export default function AdminEvents() {
   const [uploading, setUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
-  const { data: events } = useQuery({
-    queryKey: ["/api/events"],
-  });
-
   const form = useForm<EventForm>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
@@ -50,6 +46,10 @@ export default function AdminEvents() {
       imageUrl: "",
       isFeatured: false,
     },
+  });
+
+  const { data: events = [] } = useQuery({
+    queryKey: ["/api/events"],
   });
 
   const createEvent = useMutation({
@@ -225,42 +225,44 @@ export default function AdminEvents() {
                       </div>
                     )}
                     <div className="flex items-center gap-4">
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
+                      <div className="flex flex-col gap-2">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
 
-                          setUploading(true);
-                          try {
-                            const formData = new FormData();
-                            formData.append('image', file);
+                            setUploading(true);
+                            try {
+                              const formData = new FormData();
+                              formData.append('image', file);
 
-                            const response = await fetch('/api/upload', {
-                              method: 'POST',
-                              body: formData,
-                            });
+                              const response = await fetch('/api/upload', {
+                                method: 'POST',
+                                body: formData,
+                              });
 
-                            if (!response.ok) throw new Error('Upload failed');
+                              if (!response.ok) throw new Error('Upload failed');
 
-                            const { imageUrl } = await response.json();
-                            setUploadedImageUrl(imageUrl);
-                            form.setValue('imageUrl', imageUrl);
-                          } catch (error) {
-                            toast({
-                              title: "Upload Failed",
-                              description: "Failed to upload event image",
-                              variant: "destructive",
-                            });
-                          } finally {
-                            setUploading(false);
-                          }
-                        }}
-                        disabled={uploading}
-                        className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-accent file:text-accent-foreground"
-                      />
-                      {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                              const { imageUrl } = await response.json();
+                              setUploadedImageUrl(imageUrl);
+                              form.setValue('imageUrl', imageUrl);
+                            } catch (error) {
+                              toast({
+                                title: "Upload Failed",
+                                description: "Failed to upload event image",
+                                variant: "destructive",
+                              });
+                            } finally {
+                              setUploading(false);
+                            }
+                          }}
+                          disabled={uploading}
+                          className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-accent file:text-accent-foreground"
+                        />
+                        {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                      </div>
                     </div>
                     <FormField
                       control={form.control}
@@ -323,7 +325,7 @@ export default function AdminEvents() {
 
         {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events?.map((event) => (
+          {events.map((event: any) => (
             <Card key={event.id} className="card-shadow" data-testid={`card-event-${event.id}`}>
               <CardContent className="p-6">
                 {event.imageUrl && (
@@ -356,7 +358,7 @@ export default function AdminEvents() {
           ))}
         </div>
 
-        {!events?.length && (
+        {!events.length && (
           <div className="text-center py-12" data-testid="text-no-events">
             <p className="text-xl text-muted-foreground">No events found</p>
           </div>
