@@ -35,6 +35,7 @@ export interface IStorage {
   getAllUsers(): Promise<User[]>;
   createUser(user: UpsertUser): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
+  deleteUser(id: string): Promise<void>;
   
   // Menu operations
   getMenuCategories(): Promise<MenuCategory[]>;
@@ -107,6 +108,10 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await db.delete(users).where(eq(users.id, id));
   }
 
   // Menu operations
