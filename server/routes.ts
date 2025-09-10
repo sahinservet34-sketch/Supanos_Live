@@ -75,6 +75,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok' });
   });
 
+  // Initialize default admin user if none exists
+  app.post('/api/init-admin', async (req, res) => {
+    try {
+      const existingAdmin = await dbStorage.getUserByUsername('admin');
+      if (existingAdmin) {
+        return res.status(400).json({ message: 'Admin user already exists' });
+      }
+
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const adminUser = await dbStorage.createUser({
+        username: 'admin',
+        email: 'admin@supanos.bar',
+        password: hashedPassword,
+        firstName: 'Admin',
+        lastName: 'User',
+        role: 'admin'
+      });
+
+      res.json({ 
+        message: 'Admin user created successfully',
+        username: adminUser.username
+      });
+    } catch (error) {
+      console.error('Error creating admin user:', error);
+      res.status(500).json({ message: 'Failed to create admin user' });
+    }
+  });
+
   // Auth routes
   app.post("/api/auth/login", async (req, res) => {
     try {
