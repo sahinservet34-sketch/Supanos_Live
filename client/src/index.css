@@ -185,3 +185,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   transform: scale(1.02);
   transition: all 0.2s ease;
 }
+
+/* TabsList background styling */
+[role="tablist"] {
+  background-color: hsl(227, 46%, 13%) !important; /* Dark card background */
+  border: 1px solid hsl(214, 62%, 30%) !important; /* Border matching theme */
+  padding: 4px !important;
+  border-radius: 12px !important;
+}
