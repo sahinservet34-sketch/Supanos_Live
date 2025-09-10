@@ -1,16 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import AdminLayout from "@/components/admin-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
-  const { user, isLoading } = useAuth();
-  const { toast } = useToast();
-
   const { data: reservations } = useQuery({
     queryKey: ["/api/reservations"],
   });
@@ -23,24 +17,6 @@ export default function AdminDashboard() {
     queryKey: ["/api/events"],
   });
 
-  useEffect(() => {
-    if (!isLoading && (!user || user.role !== 'admin')) {
-      toast({
-        title: "Unauthorized",
-        description: "You need admin access to view this page.",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
-    }
-  }, [user, isLoading, toast]);
-
-  if (isLoading || !user || user.role !== 'admin') {
-    return <div>Loading...</div>;
-  }
-
   const todayReservations = reservations?.filter(r => 
     new Date(r.dateTime).toDateString() === new Date().toDateString()
   ).length || 0;
@@ -52,7 +28,7 @@ export default function AdminDashboard() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-display font-bold text-foreground uppercase">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, {user.firstName}!</p>
+          <p className="text-muted-foreground">Welcome to the admin dashboard!</p>
         </div>
 
         {/* Stats Cards */}
