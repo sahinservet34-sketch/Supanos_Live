@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Link } from "wouter";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -9,7 +8,8 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { user } = useAuth();
+  // Remove authentication dependency
+  const user = null;
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
@@ -65,20 +65,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               </Link>
               
               <div className="flex items-center space-x-3">
-                {user?.profileImageUrl && (
-                  <img 
-                    src={user.profileImageUrl} 
-                    alt={user.firstName || "Admin"} 
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                )}
                 <div className="hidden sm:block text-sm">
-                  <p className="text-foreground font-medium">{user?.firstName} {user?.lastName}</p>
-                  <p className="text-muted-foreground text-xs">{user?.role}</p>
+                  <p className="text-foreground font-medium">Admin</p>
+                  <p className="text-muted-foreground text-xs">Administrator</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleLogout} data-testid="button-logout-admin">
-                  Logout
-                </Button>
               </div>
             </div>
           </div>
